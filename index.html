@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE-BROTHER-FARM - Manajemen Peternakan Ayam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            farm: {
+              50: '#f4fbf7',
+              100: '#e1f5ec',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              dark: '#064e3b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-farm-500 selection:text-white">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-farm-600 text-white flex items-center justify-center shadow-md shadow-farm-600/20 text-lg font-black">
+          <i class="fa-solid fa-feather"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-slate-900 text-base md:text-lg tracking-tight">THE-BROTHER-FARM</h1>
+          <p class="text-[11px] text-slate-500 font-medium">Sistem Manajemen Peternakan Ayam Mandiri</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="exportDataJSON()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition flex items-center gap-1.5" title="Backup Data JSON">
+          <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">Backup</span>
+        </button>
+        <label class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition flex items-center gap-1.5 cursor-pointer" title="Restore Data JSON">
+          <i class="fa-solid fa-upload"></i> <span class="hidden sm:inline">Restore</span>
+          <input type="file" id="importFile" accept=".json" onchange="importDataJSON(event)" class="hidden">
+        </label>
+        <button onclick="resetAllData()" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold rounded-lg transition" title="Reset Semua Data">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="bg-white border-b border-slate-200 overflow-x-auto shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 flex gap-1 sm:gap-2">
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-farm-600 text-farm-600 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-chart-pie"></i> Ringkasan
+      </button>
+      <button onclick="switchTab('kandang')" id="nav-kandang" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-house-chimney"></i> Kandang & Populasi
+      </button>
+      <button onclick="switchTab('harian')" id="nav-harian" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-clipboard-user"></i> Catatan Harian (Mortalitas/Telur)
+      </button>
+      <button onclick="switchTab('pakan')" id="nav-pakan" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-wheat-awn"></i> Gudang Pakan & Vaksin
+      </button>
+      <button onclick="switchTab('keuangan')" id="nav-keuangan" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-wallet"></i> Keuangan (Kas/Laba)
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+
+    <!-- TAB 1: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-content space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Populasi Ayam</p>
+            <h3 id="dashTotalAyam" class="text-2xl font-extrabold text-slate-900">0</h3>
+            <p class="text-[11px] text-farm-600 font-semibold mt-1">Ekor Aktif di Kandang</p>
+          </div>
+          <div class="w-12 h-12 bg-farm-50 rounded-xl flex items-center justify-center text-farm-600 text-xl">
+            <i class="fa-solid fa-kiwi-bird"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Kandang</p>
+            <h3 id="dashTotalKandang" class="text-2xl font-extrabold text-slate-900">0</h3>
+            <p class="text-[11px] text-slate-500 font-semibold mt-1">Unit Kandang Terdaftar</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl">
+            <i class="fa-solid fa-house"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Stok Pakan Gudang</p>
+            <h3 id="dashTotalPakan" class="text-2xl font-extrabold text-slate-900">0 kg</h3>
+            <p class="text-[11px] text-amber-600 font-semibold mt-1">Total Sisa Pakan</p>
+          </div>
+          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 text-xl">
+            <i class="fa-solid fa-sack-dollar"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Saldo Kas Bersih</p>
+            <h3 id="dashSaldoKas" class="text-2xl font-extrabold text-slate-900">Rp0</h3>
+            <p class="text-[11px] text-emerald-600 font-semibold mt-1">Pemasukan - Pengeluaran</p>
+          </div>
+          <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 text-xl">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAFIK & AKTIVITAS -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm lg:col-span-2 flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-800 text-sm">Grafik Performa Harian (Mortalitas & Produksi)</h3>
+            <span class="text-xs text-slate-400">7 Hari Terakhir</span>
+          </div>
+          <div class="relative flex-1 min-h-[260px]">
+            <canvas id="performanceChart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
+          <h3 class="font-bold text-slate-800 text-sm mb-4">Jadwal Vaksin / Perawatan</h3>
+          <div id="dashVaksinList" class="space-y-3 flex-1 overflow-y-auto max-h-[260px]">
+            <div class="text-center py-8 text-slate-400 text-xs">
+              <i class="fa-solid fa-calendar-check text-2xl mb-2"></i>
+              <p>Belum ada jadwal vaksin.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: KANDANG & POPULASI -->
+    <section id="tab-kandang" class="tab-content hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-800">Manajemen Kandang & Populasi</h2>
+          <p class="text-xs text-slate-500">Kelola data kelompok/batch ayam berdasarkan kandang.</p>
+        </div>
+        <button onclick="openModal('kandangModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-plus">+ Tambah Kandang Baru</i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="kandangGrid">
+        <!-- Dynamic Kandang Cards -->
+      </div>
+    </section>
+
+    <!-- TAB 3: CATATAN HARIAN -->
+    <section id="tab-harian" class="tab-content hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-800">Catatan Harian Kandang</h2>
+          <p class="text-xs text-slate-500">Catat kematian (mortalitas), konsumsi pakan harian, produksi telur, dan timbang berat.</p>
+        </div>
+        <button onclick="openModal('harianModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-plus">+ Input Harian Baru</i>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                <th class="p-3.5 font-bold">Tanggal</th>
+                <th class="p-3.5 font-bold">Kandang</th>
+                <th class="p-3.5 font-bold">Mati (Ekor)</th>
+                <th class="p-3.5 font-bold">Pakan (Kg)</th>
+                <th class="p-3.5 font-bold">Telur (Butir/Kg)</th>
+                <th class="p-3.5 font-bold">Bobot (gram)</th>
+                <th class="p-3.5 font-bold text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="harianTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: GUDANG PAKAN & VAKSIN -->
+    <section id="tab-pakan" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Gudang Pakan -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-800">Gudang Stok Pakan</h2>
+              <p class="text-xs text-slate-500">Stok pakan pre-starter, starter, grower, finisher, atau pakan petelur.</p>
+            </div>
+            <button onclick="openModal('pakanModal')" class="px-3 py-1.5 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-lg transition">+ Stok Pakan</button>
+          </div>
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                  <th class="p-2.5 font-bold">Jenis Pakan</th>
+                  <th class="p-2.5 font-bold">Stok (Kg)</th>
+                  <th class="p-2.5 font-bold">Harga/Sak (50kg)</th>
+                  <th class="p-2.5 font-bold text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="pakanTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Jadwal Vaksin -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-800">Jadwal Vaksinasi & Kesehatan</h2>
+              <p class="text-xs text-slate-500">Program pencegahan penyakit (ND, AI, Gumboro, dll).</p>
+            </div>
+            <button onclick="openModal('vaksinModal')" class="px-3 py-1.5 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-lg transition">+ Jadwal</button>
+          </div>
+          <div class="overflow-x-auto flex-1">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                  <th class="p-2.5 font-bold">Kandang</th>
+                  <th class="p-2.5 font-bold">Jenis Vaksin</th>
+                  <th class="p-2.5 font-bold">Tanggal</th>
+                  <th class="p-2.5 font-bold">Status</th>
+                  <th class="p-2.5 font-bold text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="vaksinTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: KEUANGAN -->
+    <section id="tab-keuangan" class="tab-content hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-800">Keuangan Peternakan</h2>
+          <p class="text-xs text-slate-500">Catat pemasukan penjualan (ayam/telur) dan pengeluaran operasional (pakan/obat).</p>
+        </div>
+        <button onclick="openModal('keuanganModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+          <i class="fa-solid fa-plus">+ Catat Transaksi Kas</i>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                <th class="p-3.5 font-bold">Tanggal</th>
+                <th class="p-3.5 font-bold">Keterangan</th>
+                <th class="p-3.5 font-bold">Kategori</th>
+                <th class="p-3.5 font-bold">Jenis</th>
+                <th class="p-3.5 font-bold">Jumlah (Rp)</th>
+                <th class="p-3.5 font-bold text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="keuanganTableBody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-auto text-center">
+    <p class="font-semibold text-slate-300">&copy; <span id="yearSpan"></span> THE-BROTHER-FARM. Sistem Manajemen Peternakan Ayam Mandiri.</p>
+  </footer>
+
+  <!-- MODALS -->
+
+  <!-- Modal Kandang -->
+  <div id="kandangModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Tambah Kandang Baru</h3>
+        <button onclick="closeModal('kandangModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="text" id="kName" placeholder="Nama Kandang (Cth: Kandang A1)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <select id="kType" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+          <option value="Broiler (Pedaging)">Broiler (Pedaging)</option>
+          <option value="Layer (Petelur)">Layer (Petelur)</option>
+          <option value="Joper / Kampung">Joper / Ayam Kampung</option>
+          <option value="DOC (Day Old Chick)">DOC (Day Old Chick)</option>
+        </select>
+        <input type="number" id="kPop" placeholder="Jumlah Awal Ayam (Ekor)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="date" id="kDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <button onclick="saveKandang()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Kandang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Harian -->
+  <div id="harianModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Catat Aktivitas Harian</h3>
+        <button onclick="closeModal('harianModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="date" id="hDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <select id="hKandangId" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none"></select>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="number" id="hMati" placeholder="Ayam Mati (Ekor)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+          <input type="number" id="hPakan" placeholder="Pakan Keluar (Kg)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="number" id="hTelur" placeholder="Telur (Butir/Kg)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+          <input type="number" id="hBobot" placeholder="Berat Rata2 (gram)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        </div>
+        <button onclick="saveHarian()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Catatan Harian</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Pakan -->
+  <div id="pakanModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Tambah Stok Gudang Pakan</h3>
+        <button onclick="closeModal('pakanModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="text" id="pName" placeholder="Nama Pakan (Cth: BR-1 / Starter)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="number" id="pQty" placeholder="Jumlah Stok (Kg)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="number" id="pPrice" placeholder="Harga per Sak (50kg) Rp" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <button onclick="savePakan()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Pakan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Vaksin -->
+  <div id="vaksinModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Jadwal Vaksinasi & Kesehatan</h3>
+        <button onclick="closeModal('vaksinModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-3">
+        <select id="vKandangId" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none"></select>
+        <input type="text" id="vName" placeholder="Nama Vaksin/Obat (Cth: ND-IB / Gumboro)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="date" id="vDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <select id="vStatus" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+          <option value="Terjadwal">Terjadwal</option>
+          <option value="Selesai">Selesai</option>
+        </select>
+        <button onclick="saveVaksin()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Jadwal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Keuangan -->
+  <div id="keuanganModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Catat Kas Keuangan</h3>
+        <button onclick="closeModal('keuanganModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="date" id="kueDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="text" id="kueDesc" placeholder="Keterangan (Cth: Jual Telur / Beli Pakan)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <select id="kueType" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+          <option value="Pemasukan">Pemasukan (+)</option>
+          <option value="Pengeluaran">Pengeluaran (-)</option>
+        </select>
+        <select id="kueCat" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+          <option value="Penjualan Ayam">Penjualan Ayam</option>
+          <option value="Penjualan Telur">Penjualan Telur</option>
+          <option value="Pembelian Pakan">Pembelian Pakan</option>
+          <option value="Obat & Vaksin">Obat & Vaksin</option>
+          <option value="Operasional Lainnya">Operasional Lainnya</option>
+        </select>
+        <input type="number" id="kueAmount" placeholder="Jumlah Nominal Rp" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <button onclick="saveKeuangan()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Transaksi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT APLIKASI -->
+  <script>
+    const STORAGE_KEY = "the_brother_farm_v2_clean";
+    let db = {
+      kandang: [],
+      harian: [],
+      pakan: [],
+      vaksin: [],
+      keuangan: []
+    };
+
+    let perfChartInstance = null;
+
+    document.getElementById('yearSpan').textContent = new Date().getFullYear();
+
+    function initData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try { db = JSON.parse(saved); } catch(e) {}
+      }
+      todayDefaultDates();
+      renderAll();
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      renderAll();
+    }
+
+    function todayDefaultDates() {
+      const t = new Date().toISOString().split('T')[0];
+      const ids = ['kDate', 'hDate', 'vDate', 'kueDate'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.value = t;
+      });
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('border-farm-600', 'text-farm-600');
+        el.classList.add('border-transparent', 'text-slate-500');
+      });
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById('nav-' + tabId);
+      activeBtn.classList.remove('border-transparent', 'text-slate-500');
+      activeBtn.classList.add('border-farm-600', 'text-farm-600');
+
+      if(tabId === 'dashboard') renderChart();
+    }
+
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.remove('hidden');
+      if(modalId === 'harianModal' || modalId === 'vaksinModal') populateKandangSelects();
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    function populateKandangSelects() {
+      const hSelect = document.getElementById('hKandangId');
+      const vSelect = document.getElementById('vKandangId');
+      const opts = db.kandang.map(k => `<option value="${k.id}">${k.name} (${k.type})</option>`).join('');
+      if(hSelect) hSelect.innerHTML = opts || '<option value="">Belum ada kandang</option>';
+      if(vSelect) vSelect.innerHTML = opts || '<option value="">Belum ada kandang</option>';
+    }
+
+    // --- SAVE FUNCTIONS ---
+    function saveKandang() {
+      const name = document.getElementById('kName').value.trim();
+      const type = document.getElementById('kType').value;
+      const pop = parseInt(document.getElementById('kPop').value) || 0;
+      const date = document.getElementById('kDate').value;
+
+      if(!name) { alert('Nama kandang wajib diisi!'); return; }
+      db.kandang.push({ id: 'k_' + Date.now(), name, type, initialPop: pop, currentPop: pop, date });
+      closeModal('kandangModal');
+      document.getElementById('kName').value = '';
+      document.getElementById('kPop').value = '';
+      saveData();
+    }
+
+    function saveHarian() {
+      const date = document.getElementById('hDate').value;
+      const kandangId = document.getElementById('hKandangId').value;
+      const mati = parseInt(document.getElementById('hMati').value) || 0;
+      const pakan = parseFloat(document.getElementById('hPakan').value) || 0;
+      const telur = parseInt(document.getElementById('hTelur').value) || 0;
+      const bobot = parseInt(document.getElementById('hBobot').value) || 0;
+
+      if(!kandangId) { alert('Pilih kandang terlebih dahulu!'); return; }
+
+      // Kurangi populasi kandang jika ada kematian
+      const k = db.kandang.find(item => item.id === kandangId);
+      if(k) {
+        k.currentPop = Math.max(0, k.currentPop - mati);
+      }
+
+      db.harian.push({ id: 'h_' + Date.now(), date, kandangId, mati, pakan, telur, bobot });
+      closeModal('harianModal');
+      document.getElementById('hMati').value = '0';
+      document.getElementById('hPakan').value = '0';
+      document.getElementById('hTelur').value = '0';
+      document.getElementById('hBobot').value = '0';
+      saveData();
+    }
+
+    function savePakan() {
+      const name = document.getElementById('pName').value.trim();
+      const qty = parseFloat(document.getElementById('pQty').value) || 0;
+      const price = parseFloat(document.getElementById('pPrice').value) || 0;
+
+      if(!name) { alert('Nama pakan wajib diisi!'); return; }
+      db.pakan.push({ id: 'p_' + Date.now(), name, qty, price });
+      closeModal('pakanModal');
+      document.getElementById('pName').value = '';
+      document.getElementById('pQty').value = '';
+      document.getElementById('pPrice').value = '';
+      saveData();
+    }
+
+    function saveVaksin() {
+      const kandangId = document.getElementById('vKandangId').value;
+      const name = document.getElementById('vName').value.trim();
+      const date = document.getElementById('vDate').value;
+      const status = document.getElementById('vStatus').value;
+
+      if(!name || !kandangId) { alert('Data vaksin belum lengkap!'); return; }
+      db.vaksin.push({ id: 'v_' + Date.now(), kandangId, name, date, status });
+      closeModal('vaksinModal');
+      document.getElementById('vName').value = '';
+      saveData();
+    }
+
+    function saveKeuangan() {
+      const date = document.getElementById('kueDate').value;
+      const desc = document.getElementById('kueDesc').value.trim();
+      const type = document.getElementById('kueType').value;
+      const category = document.getElementById('kueCat').value;
+      const amount = parseFloat(document.getElementById('kueAmount').value) || 0;
+
+      if(!desc || !amount) { alert('Keterangan dan jumlah nominal wajib diisi!'); return; }
+      db.keuangan.push({ id: 'kue_' + Date.now(), date, desc, type, category, amount });
+      closeModal('keuanganModal');
+      document.getElementById('kueDesc').value = '';
+      document.getElementById('kueAmount').value = '';
+      saveData();
+    }
+
+    // --- DELETE FUNCTIONS ---
+    function deleteItem(type, id) {
+      if(!confirm('Yakin ingin menghapus data ini?')) return;
+      db[type] = db[type].filter(item => item.id !== id);
+      saveData();
+    }
+
+    // --- RENDER ALL ---
+    function renderAll() {
+      renderDashboard();
+      renderKandang();
+      renderHarian();
+      renderPakan();
+      renderVaksin();
+      renderKeuangan();
+      renderChart();
+    }
+
+    function renderDashboard() {
+      const totalAyam = db.kandang.reduce((sum, k) => sum + k.currentPop, 0);
+      const totalKandang = db.kandang.length;
+      const totalPakan = db.pakan.reduce((sum, p) => sum + p.qty, 0);
+      
+      const totalMasuk = db.keuangan.filter(k => k.type === 'Pemasukan').reduce((sum, k) => sum + k.amount, 0);
+      const totalKeluar = db.keuangan.filter(k => k.type === 'Pengeluaran').reduce((sum, k) => sum + k.amount, 0);
+      const saldo = totalMasuk - totalKeluar;
+
+      document.getElementById('dashTotalAyam').textContent = totalAyam.toLocaleString('id-ID');
+      document.getElementById('dashTotalKandang').textContent = totalKandang;
+      document.getElementById('dashTotalPakan').textContent = totalPakan.toLocaleString('id-ID') + ' kg';
+      document.getElementById('dashSaldoKas').textContent = 'Rp' + saldo.toLocaleString('id-ID');
+
+      // Vaksin list on dashboard
+      const dashVaksin = document.getElementById('dashVaksinList');
+      const pendingVaksin = db.vaksin.filter(v => v.status === 'Terjadwal');
+      if(pendingVaksin.length === 0) {
+        dashVaksin.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs"><i class="fa-solid fa-calendar-check text-2xl mb-2"></i><p>Tidak ada jadwal vaksin tertunda.</p></div>`;
+      } else {
+        dashVaksin.innerHTML = pendingVaksin.map(v => {
+          const k = db.kandang.find(item => item.id === v.kandangId);
+          return `
+            <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between text-xs">
+              <div>
+                <p class="font-bold text-slate-800">${v.name}</p>
+                <p class="text-[11px] text-slate-500">Kandang: ${k ? k.name : '-'}</p>
+              </div>
+              <span class="px-2 py-1 bg-amber-100 text-amber-700 font-bold rounded-lg text-[10px]">${v.date}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function renderKandang() {
+      const grid = document.getElementById('kandangGrid');
+      if(db.kandang.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-100 text-slate-400 text-xs"><i class="fa-solid fa-house-chimney-crack text-3xl mb-2"></i><p>Belum ada data kandang. Klik Tambah Kandang Baru.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = db.kandang.map(k => {
+        const mort = k.initialPop - k.currentPop;
+        return `
+          <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 bg-farm-50 text-farm-700 font-bold rounded-lg text-[10px] uppercase">${k.type}</span>
+                <button onclick="deleteItem('kandang', '${k.id}')" class="text-slate-300 hover:text-rose-500 text-xs"><i class="fa-solid fa-trash"></i></button>
+              </div>
+              <h3 class="font-bold text-slate-800 text-base mb-1">${k.name}</h3>
+              <p class="text-xs text-slate-400 mb-4">Mulai: ${k.date}</p>
+              
+              <div class="grid grid-cols-2 gap-3 mb-4 bg-slate-50 p-3 rounded-xl">
+                <div>
+                  <p class="text-[10px] text-slate-400 font-semibold uppercase">Populasi Aktif</p>
+                  <p class="font-extrabold text-slate-900 text-sm">${k.currentPop} ekor</p>
+                </div>
+                <div>
+                  <p class="text-[10px] text-slate-400 font-semibold uppercase">Mortalitas (Mati)</p>
+                  <p class="font-extrabold text-rose-600 text-sm">${mort} ekor</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderHarian() {
+      const tbody = document.getElementById('harianTableBody');
+      if(db.harian.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-400 text-xs">Belum ada catatan harian.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = db.harian.map(h => {
+        const k = db.kandang.find(item => item.id === h.kandangId);
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3.5 font-medium">${h.date}</td>
+            <td class="p-3.5 font-bold text-slate-700">${k ? k.name : '-'}</td>
+            <td class="p-3.5 text-rose-600 font-bold">${h.mati} ekor</td>
+            <td class="p-3.5">${h.pakan} kg</td>
+            <td class="p-3.5">${h.telur} butir/kg</td>
+            <td class="p-3.5">${h.bobot} gram</td>
+            <td class="p-3.5 text-right">
+              <button onclick="deleteItem('harian', '${h.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderPakan() {
+      const tbody = document.getElementById('pakanTableBody');
+      if(db.pakan.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400 text-xs">Belum ada stok pakan.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = db.pakan.map(p => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 font-bold text-slate-800">${p.name}</td>
+          <td class="p-2.5 font-extrabold text-farm-600">${p.qty} kg</td>
+          <td class="p-2.5">Rp${p.price.toLocaleString('id-ID')}</td>
+          <td class="p-2.5 text-right">
+            <button onclick="deleteItem('pakan', '${p.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderVaksin() {
+      const tbody = document.getElementById('vaksinTableBody');
+      if(db.vaksin.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 text-xs">Belum ada jadwal vaksin.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = db.vaksin.map(v => {
+        const k = db.kandang.find(item => item.id === v.kandangId);
+        const badgeColor = v.status === 'Selesai' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-2.5 font-bold text-slate-800">${k ? k.name : '-'}</td>
+            <td class="p-2.5">${v.name}</td>
+            <td class="p-2.5">${v.date}</td>
+            <td class="p-2.5"><span class="px-2 py-0.5 rounded-full font-bold text-[10px] ${badgeColor}">${v.status}</span></td>
+            <td class="p-2.5 text-right">
+              <button onclick="deleteItem('vaksin', '${v.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderKeuangan() {
+      const tbody = document.getElementById('keuanganTableBody');
+      if(db.keuangan.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400 text-xs">Belum ada transaksi keuangan.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = db.keuangan.map(k => {
+        const isMasuk = k.type === 'Pemasukan';
+        const color = isMasuk ? 'text-emerald-600' : 'text-rose-600';
+        const prefix = isMasuk ? '+' : '-';
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3.5 font-medium">${k.date}</td>
+            <td class="p-3.5 font-bold text-slate-800">${k.desc}</td>
+            <td class="p-3.5"><span class="px-2.5 py-1 bg-slate-100 rounded-lg text-[10px] font-semibold">${k.category}</span></td>
+            <td class="p-3.5"><span class="font-bold ${color}">${k.type}</span></td>
+            <td class="p-3.5 font-extrabold ${color}">${prefix}Rp${k.amount.toLocaleString('id-ID')}</td>
+            <td class="p-3.5 text-right">
+              <button onclick="deleteItem('keuangan', '${k.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('performanceChart');
+      if(!ctx) return;
+
+      // Ambil 5 data harian terakhir
+      const lastData = db.harian.slice(-5);
+      const labels = lastData.map(h => h.date);
+      const matiData = lastData.map(h => h.mati);
+      const pakanData = lastData.map(h => h.pakan);
+
+      if(perfChartInstance) perfChartInstance.destroy();
+
+      perfChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.length ? labels : ['Hari 1', 'Hari 2', 'Hari 3', 'Hari 4', 'Hari 5'],
+          datasets: [
+            {
+              label: 'Kematian Ayam (Ekor)',
+              data: matiData.length ? matiData : [0, 0, 0, 0, 0],
+              borderColor: '#f43f5e',
+              backgroundColor: 'rgba(244, 63, 94, 0.1)',
+              tension: 0.3,
+              fill: true
+            },
+            {
+              label: 'Pakan Keluar (Kg)',
+              data: pakanData.length ? pakanData : [0, 0, 0, 0, 0],
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              tension: 0.3,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    // --- BACKUP & RESTORE JSON ---
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+      const dlAnchorElem = document.createElement('a');
+      dlAnchorElem.setAttribute("href", dataStr);
+      dlAnchorElem.setAttribute("download", "the_brother_farm_backup.json");
+      dlAnchorElem.click();
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          db = JSON.parse(e.target.result);
+          saveData();
+          alert('Data berhasil dipulihkan!');
+        } catch(err) {
+          alert('File JSON tidak valid!');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetAllData() {
+      if(!confirm('PERINGATAN: Semua data peternakan akan dihapus dan kembali ke nol. Lanjutkan?')) return;
+      db = { kandang: [], harian: [], pakan: [], vaksin: [], keuangan: [] };
+      saveData();
+    }
+
+    // Load saat pertama kali
+    initData();
+  </script>
+</body>
+</html>
