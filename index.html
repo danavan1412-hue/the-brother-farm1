@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>THE-BROTHER-FARM - Manajemen Peternakan Ayam</title>
+  <title>THE-BROTHER-FARM - Manajemen Pertanian & Peternakan Terpadu</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -36,7 +36,7 @@
       </div>
       <div>
         <h3 class="text-lg font-extrabold text-slate-900">Akses Terbatas</h3>
-        <p class="text-xs text-slate-500 mt-1">Masukkan sandi rahasia untuk membuka aplikasi THE-BROTHER-FARM.</p>
+        <p class="text-xs text-slate-500 mt-1">Masukkan sandi rahasia untuk membuka THE-BROTHER-FARM Terpadu.</p>
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-3">
         <input type="password" id="loginPasswordInput" placeholder="Masukkan Sandi..." class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-farm-500 focus:outline-none text-center tracking-widest font-bold" autofocus required>
@@ -53,11 +53,11 @@
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-farm-600 text-white flex items-center justify-center shadow-md shadow-farm-600/20 text-lg font-black">
-          <i class="fa-solid fa-feather"></i>
+          <i class="fa-solid fa-seedling"></i>
         </div>
         <div>
           <h1 class="font-extrabold text-slate-900 text-base md:text-lg tracking-tight">THE-BROTHER-FARM</h1>
-          <p class="text-[11px] text-slate-500 font-medium">Sistem Manajemen Peternakan Ayam Mandiri</p>
+          <p class="text-[11px] text-slate-500 font-medium">Ayam, Pupuk, Maggot BSF & Kebun Cabai</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -81,17 +81,20 @@
       <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-farm-600 text-farm-600 whitespace-nowrap flex items-center gap-2">
         <i class="fa-solid fa-chart-pie"></i> Ringkasan
       </button>
-      <button onclick="switchTab('kandang')" id="nav-kandang" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
-        <i class="fa-solid fa-house-chimney"></i> Kandang & Populasi
+      <button onclick="switchTab('ayam')" id="nav-ayam" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-kiwi-bird"></i> Ternak Ayam
       </button>
-      <button onclick="switchTab('harian')" id="nav-harian" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
-        <i class="fa-solid fa-clipboard-user"></i> Catatan Harian (Mortalitas/Telur)
+      <button onclick="switchTab('maggot')" id="nav-maggot" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-bugs"></i> Pakan Maggot BSF
       </button>
-      <button onclick="switchTab('pakan')" id="nav-pakan" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
-        <i class="fa-solid fa-wheat-awn"></i> Gudang Pakan & Vaksin
+      <button onclick="switchTab('pupuk')" id="nav-pupuk" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-poop"></i> Pengolahan Pupuk
+      </button>
+      <button onclick="switchTab('cabai')" id="nav-cabai" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
+        <i class="fa-solid fa-pepper-hot"></i> Kebun Cabai
       </button>
       <button onclick="switchTab('keuangan')" id="nav-keuangan" class="tab-btn px-4 py-3 text-xs md:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center gap-2">
-        <i class="fa-solid fa-wallet"></i> Keuangan (Kas/Laba)
+        <i class="fa-solid fa-wallet"></i> Keuangan Kas
       </button>
     </div>
   </nav>
@@ -104,9 +107,9 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Populasi Ayam</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Populasi Ayam</p>
             <h3 id="dashTotalAyam" class="text-2xl font-extrabold text-slate-900">0</h3>
-            <p class="text-[11px] text-farm-600 font-semibold mt-1">Ekor Aktif di Kandang</p>
+            <p class="text-[11px] text-farm-600 font-semibold mt-1">Ekor Aktif</p>
           </div>
           <div class="w-12 h-12 bg-farm-50 rounded-xl flex items-center justify-center text-farm-600 text-xl">
             <i class="fa-solid fa-kiwi-bird"></i>
@@ -115,23 +118,23 @@
 
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Kandang</p>
-            <h3 id="dashTotalKandang" class="text-2xl font-extrabold text-slate-900">0</h3>
-            <p class="text-[11px] text-slate-500 font-semibold mt-1">Unit Kandang Terdaftar</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Stok Maggot BSF</p>
+            <h3 id="dashTotalMaggot" class="text-2xl font-extrabold text-slate-900">0 kg</h3>
+            <p class="text-[11px] text-amber-600 font-semibold mt-1">Biomassa Aktif</p>
           </div>
-          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl">
-            <i class="fa-solid fa-house"></i>
+          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 text-xl">
+            <i class="fa-solid fa-bugs"></i>
           </div>
         </div>
 
         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Stok Pakan Gudang</p>
-            <h3 id="dashTotalPakan" class="text-2xl font-extrabold text-slate-900">0 kg</h3>
-            <p class="text-[11px] text-amber-600 font-semibold mt-1">Total Sisa Pakan</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Stok Pupuk</p>
+            <h3 id="dashTotalPupuk" class="text-2xl font-extrabold text-slate-900">0 kg</h3>
+            <p class="text-[11px] text-blue-600 font-semibold mt-1">Kompos / Organik Siap Jual</p>
           </div>
-          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 text-xl">
-            <i class="fa-solid fa-sack-dollar"></i>
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl">
+            <i class="fa-solid fa-sack-arrow-up"></i>
           </div>
         </div>
 
@@ -147,12 +150,12 @@
         </div>
       </div>
 
-      <!-- GRAFIK & AKTIVITAS -->
+      <!-- GRAFIK & INFO CABAI -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm lg:col-span-2 flex flex-col">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-slate-800 text-sm">Grafik Performa Harian (Mortalitas & Produksi)</h3>
-            <span class="text-xs text-slate-400">7 Hari Terakhir</span>
+            <h3 class="font-bold text-slate-800 text-sm">Aktivitas & Keuangan Terpadu</h3>
+            <span class="text-xs text-slate-400">Ringkasan Sektor</span>
           </div>
           <div class="relative flex-1 min-h-[260px]">
             <canvas id="performanceChart"></canvas>
@@ -160,132 +163,114 @@
         </div>
 
         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
-          <h3 class="font-bold text-slate-800 text-sm mb-4">Jadwal Vaksin / Perawatan</h3>
-          <div id="dashVaksinList" class="space-y-3 flex-1 overflow-y-auto max-h-[260px]">
+          <h3 class="font-bold text-slate-800 text-sm mb-4">Status Kebun Cabai</h3>
+          <div id="dashCabaiList" class="space-y-3 flex-1 overflow-y-auto max-h-[260px]">
             <div class="text-center py-8 text-slate-400 text-xs">
-              <i class="fa-solid fa-calendar-check text-2xl mb-2"></i>
-              <p>Belum ada jadwal vaksin.</p>
+              <i class="fa-solid fa-pepper-hot text-2xl mb-2"></i>
+              <p>Belum ada data bedengan cabai.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: KANDANG & POPULASI -->
-    <section id="tab-kandang" class="tab-content hidden space-y-6">
+    <!-- TAB 2: TERNAK AYAM -->
+    <section id="tab-ayam" class="tab-content hidden space-y-6">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 class="text-lg font-extrabold text-slate-800">Manajemen Kandang & Populasi</h2>
-          <p class="text-xs text-slate-500">Kelola data kelompok/batch ayam berdasarkan kandang.</p>
+          <h2 class="text-lg font-extrabold text-slate-800">Manajemen Ternak Ayam</h2>
+          <p class="text-xs text-slate-500">Kelola kandang, populasi, kematian, dan pencatatan harian ayam.</p>
         </div>
-        <button onclick="openModal('kandangModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
-          <i class="fa-solid fa-plus">+ Tambah Kandang Baru</i>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="kandangGrid">
-        <!-- Dynamic Kandang Cards -->
-      </div>
-    </section>
-
-    <!-- TAB 3: CATATAN HARIAN -->
-    <section id="tab-harian" class="tab-content hidden space-y-6">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-lg font-extrabold text-slate-800">Catatan Harian Kandang</h2>
-          <p class="text-xs text-slate-500">Catat kematian (mortalitas), konsumsi pakan harian, produksi telur, dan timbang berat.</p>
+        <div class="flex gap-2">
+          <button onclick="openModal('kandangModal')" class="px-3.5 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition">+ Kandang</button>
+          <button onclick="openModal('harianAyamModal')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl shadow-md transition">+ Catat Harian</button>
         </div>
-        <button onclick="openModal('harianModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
-          <i class="fa-solid fa-plus">+ Input Harian Baru</i>
-        </button>
       </div>
 
-      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="kandangGrid"></div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-5">
+        <h3 class="font-bold text-slate-800 text-sm mb-3">Riwayat Harian Ayam (Mati/Pakan/Telur)</h3>
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
+          <table class="w-full text-left text-xs">
             <thead>
               <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
-                <th class="p-3.5 font-bold">Tanggal</th>
-                <th class="p-3.5 font-bold">Kandang</th>
-                <th class="p-3.5 font-bold">Mati (Ekor)</th>
-                <th class="p-3.5 font-bold">Pakan (Kg)</th>
-                <th class="p-3.5 font-bold">Telur (Butir/Kg)</th>
-                <th class="p-3.5 font-bold">Bobot (gram)</th>
-                <th class="p-3.5 font-bold text-right">Aksi</th>
+                <th class="p-2.5 font-bold">Tanggal</th>
+                <th class="p-2.5 font-bold">Kandang</th>
+                <th class="p-2.5 font-bold">Mati (Ekor)</th>
+                <th class="p-2.5 font-bold">Pakan (Kg)</th>
+                <th class="p-2.5 font-bold">Telur</th>
+                <th class="p-2.5 font-bold text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody id="harianTableBody" class="divide-y divide-slate-100">
-              <!-- Dynamic Rows -->
-            </tbody>
+            <tbody id="harianAyamTableBody" class="divide-y divide-slate-100"></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- TAB 4: GUDANG PAKAN & VAKSIN -->
-    <section id="tab-pakan" class="tab-content hidden space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Gudang Pakan -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h2 class="text-base font-extrabold text-slate-800">Gudang Stok Pakan</h2>
-              <p class="text-xs text-slate-500">Stok pakan pre-starter, starter, grower, finisher, atau pakan petelur.</p>
-            </div>
-            <button onclick="openModal('pakanModal')" class="px-3 py-1.5 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-lg transition">+ Stok Pakan</button>
-          </div>
-          <div class="overflow-x-auto flex-1">
-            <table class="w-full text-left text-xs">
-              <thead>
-                <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
-                  <th class="p-2.5 font-bold">Jenis Pakan</th>
-                  <th class="p-2.5 font-bold">Stok (Kg)</th>
-                  <th class="p-2.5 font-bold">Harga/Sak (50kg)</th>
-                  <th class="p-2.5 font-bold text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="pakanTableBody" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
+    <!-- TAB 3: PAKAN MAGGOT BSF -->
+    <section id="tab-maggot" class="tab-content hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-800">Pengelolaan Pakan Maggot BSF</h2>
+          <p class="text-xs text-slate-500">Pantau tahapan biokonversi (Media sampah organik, Baby Maggot, Larva aktif, hingga Panen Kasgot).</p>
         </div>
+        <button onclick="openModal('maggotModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition">+ Tambah Batch / Rak BSF</button>
+      </div>
 
-        <!-- Jadwal Vaksin -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h2 class="text-base font-extrabold text-slate-800">Jadwal Vaksinasi & Kesehatan</h2>
-              <p class="text-xs text-slate-500">Program pencegahan penyakit (ND, AI, Gumboro, dll).</p>
-            </div>
-            <button onclick="openModal('vaksinModal')" class="px-3 py-1.5 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-lg transition">+ Jadwal</button>
-          </div>
-          <div class="overflow-x-auto flex-1">
-            <table class="w-full text-left text-xs">
-              <thead>
-                <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
-                  <th class="p-2.5 font-bold">Kandang</th>
-                  <th class="p-2.5 font-bold">Jenis Vaksin</th>
-                  <th class="p-2.5 font-bold">Tanggal</th>
-                  <th class="p-2.5 font-bold">Status</th>
-                  <th class="p-2.5 font-bold text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="vaksinTableBody" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="maggotGrid"></div>
+    </section>
+
+    <!-- TAB 4: PENGOLAHAN PUPUK -->
+    <section id="tab-pupuk" class="tab-content hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-800">Pengolahan & Produksi Pupuk</h2>
+          <p class="text-xs text-slate-500">Kelola produksi pupuk kompos dari kotoran ternak / kasgot maggot siap kemas.</p>
+        </div>
+        <button onclick="openModal('pupukModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition">+ Catat Produksi / Stok Pupuk</button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-5">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                <th class="p-3 font-bold">Tanggal</th>
+                <th class="p-3 font-bold">Jenis Pupuk</th>
+                <th class="p-3 font-bold">Jumlah (Kg / Karung)</th>
+                <th class="p-3 font-bold">Status / Keterangan</th>
+                <th class="p-3 font-bold text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pupukTableBody" class="divide-y divide-slate-100"></tbody>
+          </table>
         </div>
       </div>
     </section>
 
-    <!-- TAB 5: KEUANGAN -->
+    <!-- TAB 5: KEBUN CABAI -->
+    <section id="tab-cabai" class="tab-content hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-800">Manajemen Penanaman Cabai</h2>
+          <p class="text-xs text-slate-500">Kelola bedengan/lahan cabai (Rawit, Keriting, Besar), pemupukan, dan estimasi panen.</p>
+        </div>
+        <button onclick="openModal('cabaiModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition">+ Tambah Lahan / Bedengan Cabai</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="cabaiGrid"></div>
+    </section>
+
+    <!-- TAB 6: KEUANGAN -->
     <section id="tab-keuangan" class="tab-content hidden space-y-6">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 class="text-lg font-extrabold text-slate-800">Keuangan Peternakan</h2>
-          <p class="text-xs text-slate-500">Catat pemasukan penjualan (ayam/telur) dan pengeluaran operasional (pakan/obat).</p>
+          <h2 class="text-lg font-extrabold text-slate-800">Kas & Keuangan Terpadu</h2>
+          <p class="text-xs text-slate-500">Pemasukan & pengeluaran gabungan dari ayam, maggot, pupuk, dan kebun cabai.</p>
         </div>
-        <button onclick="openModal('keuanganModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
-          <i class="fa-solid fa-plus">+ Catat Transaksi Kas</i>
-        </button>
+        <button onclick="openModal('keuanganModal')" class="px-4 py-2 bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs rounded-xl shadow-md transition">+ Catat Transaksi Kas</button>
       </div>
 
       <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
@@ -295,7 +280,7 @@
               <tr class="bg-slate-50 text-slate-500 border-b border-slate-200">
                 <th class="p-3.5 font-bold">Tanggal</th>
                 <th class="p-3.5 font-bold">Keterangan</th>
-                <th class="p-3.5 font-bold">Kategori</th>
+                <th class="p-3.5 font-bold">Sektor</th>
                 <th class="p-3.5 font-bold">Jenis</th>
                 <th class="p-3.5 font-bold">Jumlah (Rp)</th>
                 <th class="p-3.5 font-bold text-right">Aksi</th>
@@ -311,25 +296,25 @@
 
   <!-- FOOTER -->
   <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-auto text-center">
-    <p class="font-semibold text-slate-300">&copy; <span id="yearSpan"></span> THE-BROTHER-FARM. Sistem Manajemen Peternakan Ayam Mandiri.</p>
+    <p class="font-semibold text-slate-300">&copy; <span id="yearSpan"></span> THE-BROTHER-FARM. Sistem Terpadu Peternakan & Pertanian.</p>
   </footer>
 
   <!-- MODALS -->
 
-  <!-- Modal Kandang -->
+  <!-- Modal Kandang Ayam -->
   <div id="kandangModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
-        <h3 class="font-bold text-sm">Tambah Kandang Baru</h3>
+        <h3 class="font-bold text-sm">Tambah Kandang Ayam</h3>
         <button onclick="closeModal('kandangModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-5 space-y-3">
-        <input type="text" id="kName" placeholder="Nama Kandang (Cth: Kandang A1)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="text" id="kName" placeholder="Nama Kandang (Cth: Kandang Broiler 1)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
         <select id="kType" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-          <option value="Broiler (Pedaging)">Broiler (Pedaging)</option>
-          <option value="Layer (Petelur)">Layer (Petelur)</option>
-          <option value="Joper / Kampung">Joper / Ayam Kampung</option>
-          <option value="DOC (Day Old Chick)">DOC (Day Old Chick)</option>
+          <option value="Broiler">Broiler (Pedaging)</option>
+          <option value="Layer">Layer (Petelur)</option>
+          <option value="Joper / Kampung">Joper / Kampung</option>
+          <option value="DOC">DOC (Day Old Chick)</option>
         </select>
         <input type="number" id="kPop" placeholder="Jumlah Awal Ayam (Ekor)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
         <input type="date" id="kDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
@@ -338,61 +323,83 @@
     </div>
   </div>
 
-  <!-- Modal Harian -->
-  <div id="harianModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <!-- Modal Harian Ayam -->
+  <div id="harianAyamModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
-        <h3 class="font-bold text-sm">Catat Aktivitas Harian</h3>
-        <button onclick="closeModal('harianModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <h3 class="font-bold text-sm">Catat Harian Ayam</h3>
+        <button onclick="closeModal('harianAyamModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-5 space-y-3">
-        <input type="date" id="hDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <select id="hKandangId" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none"></select>
-        <div class="grid grid-cols-2 gap-2">
-          <input type="number" id="hMati" placeholder="Ayam Mati (Ekor)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-          <input type="number" id="hPakan" placeholder="Pakan Keluar (Kg)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="date" id="haDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <select id="haKandangId" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs"></select>
+        <div class="grid grid-cols-3 gap-2">
+          <input type="number" id="haMati" placeholder="Mati (Ekor)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+          <input type="number" id="haPakan" placeholder="Pakan (Kg)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+          <input type="number" id="haTelur" placeholder="Telur (Butir)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <input type="number" id="hTelur" placeholder="Telur (Butir/Kg)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-          <input type="number" id="hBobot" placeholder="Berat Rata2 (gram)" value="0" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        </div>
-        <button onclick="saveHarian()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Catatan Harian</button>
+        <button onclick="saveHarianAyam()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Catatan</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal Pakan -->
-  <div id="pakanModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <!-- Modal Maggot BSF -->
+  <div id="maggotModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
-        <h3 class="font-bold text-sm">Tambah Stok Gudang Pakan</h3>
-        <button onclick="closeModal('pakanModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <h3 class="font-bold text-sm">Tambah / Update Batch Maggot BSF</h3>
+        <button onclick="closeModal('maggotModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-5 space-y-3">
-        <input type="text" id="pName" placeholder="Nama Pakan (Cth: BR-1 / Starter)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <input type="number" id="pQty" placeholder="Jumlah Stok (Kg)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <input type="number" id="pPrice" placeholder="Harga per Sak (50kg) Rp" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <button onclick="savePakan()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Pakan</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Vaksin -->
-  <div id="vaksinModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
-        <h3 class="font-bold text-sm">Jadwal Vaksinasi & Kesehatan</h3>
-        <button onclick="closeModal('vaksinModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="p-5 space-y-3">
-        <select id="vKandangId" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none"></select>
-        <input type="text" id="vName" placeholder="Nama Vaksin/Obat (Cth: ND-IB / Gumboro)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <input type="date" id="vDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <select id="vStatus" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-          <option value="Terjadwal">Terjadwal</option>
-          <option value="Selesai">Selesai</option>
+        <input type="text" id="mName" placeholder="Nama Biopond / Rak (Cth: Rak Maggot A)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <select id="mPhase" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+          <option value="Fase Telur / Hatching">Fase Telur / Hatching</option>
+          <option value="Baby Maggot (L1-L3)">Baby Maggot (L1-L3)</option>
+          <option value="Larva Aktif (Pembesaran)">Larva Aktif (Pembesaran)</option>
+          <option value="Prepupa / Kepompong">Prepupa / Kepompong</option>
+          <option value="Siap Panen / Kasgot">Siap Panen / Kasgot</option>
         </select>
-        <button onclick="saveVaksin()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Jadwal</button>
+        <input type="number" id="mWeight" placeholder="Estimasi Berat Biomassa (Kg)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <input type="date" id="mDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <button onclick="saveMaggot()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Batch Maggot</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Pupuk -->
+  <div id="pupukModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Catat Produksi / Stok Pupuk</h3>
+        <button onclick="closeModal('pupukModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="date" id="pDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <input type="text" id="pName" placeholder="Jenis Pupuk (Cth: Kompos Kotoran Ayam / Kasgot BSF)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <input type="number" id="pQty" placeholder="Jumlah Berat (Kg)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <input type="text" id="pDesc" placeholder="Keterangan / Status (Cth: Siap Kemas / Terjual)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <button onclick="savePupuk()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Data Pupuk</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cabai -->
+  <div id="cabaiModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Tambah Lahan / Bedengan Cabai</h3>
+        <button onclick="closeModal('cabaiModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="text" id="cName" placeholder="Nama Lahan / Bedengan (Cth: Bedengan Cabai Rawit 1)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <select id="cVariety" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+          <option value="Cabai Rawit">Cabai Rawit (Cengek)</option>
+          <option value="Cabai Keriting">Cabai Merah Keriting</option>
+          <option value="Cabai Besar">Cabai Merah Besar</option>
+        </select>
+        <input type="number" id="cCount" placeholder="Jumlah Batang Tanaman" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <input type="date" id="cDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <button onclick="saveCabai()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Lahan Cabai</button>
       </div>
     </div>
   </div>
@@ -401,24 +408,24 @@
   <div id="keuanganModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
       <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
-        <h3 class="font-bold text-sm">Catat Kas Keuangan</h3>
+        <h3 class="font-bold text-sm">Catat Kas & Keuangan Terpadu</h3>
         <button onclick="closeModal('keuanganModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-5 space-y-3">
-        <input type="date" id="kueDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <input type="text" id="kueDesc" placeholder="Keterangan (Cth: Jual Telur / Beli Pakan)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-        <select id="kueType" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="date" id="kueDate" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <input type="text" id="kueDesc" placeholder="Keterangan (Cth: Jual Telur / Jual Pupuk / Jual Cabai)" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+        <select id="kueSector" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
+          <option value="Ternak Ayam">Ternak Ayam</option>
+          <option value="Pakan Maggot BSF">Pakan Maggot BSF</option>
+          <option value="Pengolahan Pupuk">Pengolahan Pupuk</option>
+          <option value="Kebun Cabai">Kebun Cabai</option>
+          <option value="Operasional Umum">Operasional Umum</option>
+        </select>
+        <select id="kueType" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
           <option value="Pemasukan">Pemasukan (+)</option>
           <option value="Pengeluaran">Pengeluaran (-)</option>
         </select>
-        <select id="kueCat" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
-          <option value="Penjualan Ayam">Penjualan Ayam</option>
-          <option value="Penjualan Telur">Penjualan Telur</option>
-          <option value="Pembelian Pakan">Pembelian Pakan</option>
-          <option value="Obat & Vaksin">Obat & Vaksin</option>
-          <option value="Operasional Lainnya">Operasional Lainnya</option>
-        </select>
-        <input type="number" id="kueAmount" placeholder="Jumlah Nominal Rp" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-farm-500 focus:outline-none">
+        <input type="number" id="kueAmount" placeholder="Jumlah Nominal Rp" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs">
         <button onclick="saveKeuangan()" class="w-full py-2.5 bg-farm-600 hover:bg-farm-700 text-white font-bold rounded-xl text-xs transition">Simpan Transaksi</button>
       </div>
     </div>
@@ -426,20 +433,19 @@
 
   <!-- SCRIPT APLIKASI -->
   <script>
-    // --- SANDI / PASSWORD APLIKASI ---
-    const APP_PASSWORD = "210514"; // Anda bisa mengubah angka "12345" ini sesuai keinginan
+    const APP_PASSWORD = "130503"; // Sandi pengaman aplikasi
+    const STORAGE_KEY = "the_brother_farm_pro_v1";
 
-    const STORAGE_KEY = "the_brother_farm_v2_clean";
     let db = {
       kandang: [],
-      harian: [],
-      pakan: [],
-      vaksin: [],
+      harianAyam: [],
+      maggot: [],
+      pupuk: [],
+      cabai: [],
       keuangan: []
     };
 
     let perfChartInstance = null;
-
     document.getElementById('yearSpan').textContent = new Date().getFullYear();
 
     function handleLogin(event) {
@@ -472,8 +478,7 @@
 
     function todayDefaultDates() {
       const t = new Date().toISOString().split('T')[0];
-      const ids = ['kDate', 'hDate', 'vDate', 'kueDate'];
-      ids.forEach(id => {
+      ['kDate', 'haDate', 'mDate', 'pDate', 'cDate', 'kueDate'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.value = t;
       });
@@ -495,7 +500,7 @@
 
     function openModal(modalId) {
       document.getElementById(modalId).classList.remove('hidden');
-      if(modalId === 'harianModal' || modalId === 'vaksinModal') populateKandangSelects();
+      if(modalId === 'harianAyamModal') populateKandangSelects();
     }
 
     function closeModal(modalId) {
@@ -503,11 +508,9 @@
     }
 
     function populateKandangSelects() {
-      const hSelect = document.getElementById('hKandangId');
-      const vSelect = document.getElementById('vKandangId');
+      const sel = document.getElementById('haKandangId');
       const opts = db.kandang.map(k => `<option value="${k.id}">${k.name} (${k.type})</option>`).join('');
-      if(hSelect) hSelect.innerHTML = opts || '<option value="">Belum ada kandang</option>';
-      if(vSelect) vSelect.innerHTML = opts || '<option value="">Belum ada kandang</option>';
+      sel.innerHTML = opts || '<option value="">Belum ada kandang</option>';
     }
 
     // --- SAVE FUNCTIONS ---
@@ -516,7 +519,6 @@
       const type = document.getElementById('kType').value;
       const pop = parseInt(document.getElementById('kPop').value) || 0;
       const date = document.getElementById('kDate').value;
-
       if(!name) { alert('Nama kandang wajib diisi!'); return; }
       db.kandang.push({ id: 'k_' + Date.now(), name, type, initialPop: pop, currentPop: pop, date });
       closeModal('kandangModal');
@@ -525,66 +527,71 @@
       saveData();
     }
 
-    function saveHarian() {
-      const date = document.getElementById('hDate').value;
-      const kandangId = document.getElementById('hKandangId').value;
-      const mati = parseInt(document.getElementById('hMati').value) || 0;
-      const pakan = parseFloat(document.getElementById('hPakan').value) || 0;
-      const telur = parseInt(document.getElementById('hTelur').value) || 0;
-      const bobot = parseInt(document.getElementById('hBobot').value) || 0;
+    function saveHarianAyam() {
+      const date = document.getElementById('haDate').value;
+      const kandangId = document.getElementById('haKandangId').value;
+      const mati = parseInt(document.getElementById('haMati').value) || 0;
+      const pakan = parseFloat(document.getElementById('haPakan').value) || 0;
+      const telur = parseInt(document.getElementById('haTelur').value) || 0;
 
       if(!kandangId) { alert('Pilih kandang terlebih dahulu!'); return; }
-
       const k = db.kandang.find(item => item.id === kandangId);
-      if(k) {
-        k.currentPop = Math.max(0, k.currentPop - mati);
-      }
+      if(k) k.currentPop = Math.max(0, k.currentPop - mati);
 
-      db.harian.push({ id: 'h_' + Date.now(), date, kandangId, mati, pakan, telur, bobot });
-      closeModal('harianModal');
-      document.getElementById('hMati').value = '0';
-      document.getElementById('hPakan').value = '0';
-      document.getElementById('hTelur').value = '0';
-      document.getElementById('hBobot').value = '0';
+      db.harianAyam.push({ id: 'ha_' + Date.now(), date, kandangId, mati, pakan, telur });
+      closeModal('harianAyamModal');
       saveData();
     }
 
-    function savePakan() {
+    function saveMaggot() {
+      const name = document.getElementById('mName').value.trim();
+      const phase = document.getElementById('mPhase').value;
+      const weight = parseFloat(document.getElementById('mWeight').value) || 0;
+      const date = document.getElementById('mDate').value;
+      if(!name) { alert('Nama batch wajib diisi!'); return; }
+      db.maggot.push({ id: 'm_' + Date.now(), name, phase, weight, date });
+      closeModal('maggotModal');
+      document.getElementById('mName').value = '';
+      document.getElementById('mWeight').value = '';
+      saveData();
+    }
+
+    function savePupuk() {
+      const date = document.getElementById('pDate').value;
       const name = document.getElementById('pName').value.trim();
       const qty = parseFloat(document.getElementById('pQty').value) || 0;
-      const price = parseFloat(document.getElementById('pPrice').value) || 0;
-
-      if(!name) { alert('Nama pakan wajib diisi!'); return; }
-      db.pakan.push({ id: 'p_' + Date.now(), name, qty, price });
-      closeModal('pakanModal');
+      const desc = document.getElementById('pDesc').value.trim();
+      if(!name || !qty) { alert('Jenis dan jumlah pupuk wajib diisi!'); return; }
+      db.pupuk.push({ id: 'p_' + Date.now(), date, name, qty, desc });
+      closeModal('pupukModal');
       document.getElementById('pName').value = '';
       document.getElementById('pQty').value = '';
-      document.getElementById('pPrice').value = '';
+      document.getElementById('pDesc').value = '';
       saveData();
     }
 
-    function saveVaksin() {
-      const kandangId = document.getElementById('vKandangId').value;
-      const name = document.getElementById('vName').value.trim();
-      const date = document.getElementById('vDate').value;
-      const status = document.getElementById('vStatus').value;
-
-      if(!name || !kandangId) { alert('Data vaksin belum lengkap!'); return; }
-      db.vaksin.push({ id: 'v_' + Date.now(), kandangId, name, date, status });
-      closeModal('vaksinModal');
-      document.getElementById('vName').value = '';
+    function saveCabai() {
+      const name = document.getElementById('cName').value.trim();
+      const variety = document.getElementById('cVariety').value;
+      const count = parseInt(document.getElementById('cCount').value) || 0;
+      const date = document.getElementById('cDate').value;
+      if(!name) { alert('Nama lahan wajib diisi!'); return; }
+      db.cabai.push({ id: 'c_' + Date.now(), name, variety, count, date });
+      closeModal('cabaiModal');
+      document.getElementById('cName').value = '';
+      document.getElementById('cCount').value = '';
       saveData();
     }
 
     function saveKeuangan() {
       const date = document.getElementById('kueDate').value;
       const desc = document.getElementById('kueDesc').value.trim();
+      const sector = document.getElementById('kueSector').value;
       const type = document.getElementById('kueType').value;
-      const category = document.getElementById('kueCat').value;
       const amount = parseFloat(document.getElementById('kueAmount').value) || 0;
 
-      if(!desc || !amount) { alert('Keterangan dan jumlah nominal wajib diisi!'); return; }
-      db.keuangan.push({ id: 'kue_' + Date.now(), date, desc, type, category, amount });
+      if(!desc || !amount) { alert('Keterangan dan nominal wajib diisi!'); return; }
+      db.keuangan.push({ id: 'kue_' + Date.now(), date, desc, sector, type, amount });
       closeModal('keuanganModal');
       document.getElementById('kueDesc').value = '';
       document.getElementById('kueAmount').value = '';
@@ -593,7 +600,7 @@
 
     // --- DELETE FUNCTIONS ---
     function deleteItem(type, id) {
-      if(!confirm('Yakin ingin menghapus data ini?')) return;
+      if(!confirm('Hapus data ini?')) return;
       db[type] = db[type].filter(item => item.id !== id);
       saveData();
     }
@@ -601,226 +608,181 @@
     // --- RENDER ALL ---
     function renderAll() {
       renderDashboard();
-      renderKandang();
-      renderHarian();
-      renderPakan();
-      renderVaksin();
+      renderAyam();
+      renderMaggot();
+      renderPupuk();
+      renderCabai();
       renderKeuangan();
       renderChart();
     }
 
     function renderDashboard() {
       const totalAyam = db.kandang.reduce((sum, k) => sum + k.currentPop, 0);
-      const totalKandang = db.kandang.length;
-      const totalPakan = db.pakan.reduce((sum, p) => sum + p.qty, 0);
+      const totalMaggot = db.maggot.reduce((sum, m) => sum + m.weight, 0);
+      const totalPupuk = db.pupuk.reduce((sum, p) => sum + p.qty, 0);
       
       const totalMasuk = db.keuangan.filter(k => k.type === 'Pemasukan').reduce((sum, k) => sum + k.amount, 0);
       const totalKeluar = db.keuangan.filter(k => k.type === 'Pengeluaran').reduce((sum, k) => sum + k.amount, 0);
       const saldo = totalMasuk - totalKeluar;
 
       document.getElementById('dashTotalAyam').textContent = totalAyam.toLocaleString('id-ID');
-      document.getElementById('dashTotalKandang').textContent = totalKandang;
-      document.getElementById('dashTotalPakan').textContent = totalPakan.toLocaleString('id-ID') + ' kg';
+      document.getElementById('dashTotalMaggot').textContent = totalMaggot.toLocaleString('id-ID') + ' kg';
+      document.getElementById('dashTotalPupuk').textContent = totalPupuk.toLocaleString('id-ID') + ' kg';
       document.getElementById('dashSaldoKas').textContent = 'Rp' + saldo.toLocaleString('id-ID');
 
-      const dashVaksin = document.getElementById('dashVaksinList');
-      const pendingVaksin = db.vaksin.filter(v => v.status === 'Terjadwal');
-      if(pendingVaksin.length === 0) {
-        dashVaksin.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs"><i class="fa-solid fa-calendar-check text-2xl mb-2"></i><p>Tidak ada jadwal vaksin tertunda.</p></div>`;
+      // Cabai list di dashboard
+      const dashCabai = document.getElementById('dashCabaiList');
+      if(db.cabai.length === 0) {
+        dashCabai.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs"><i class="fa-solid fa-pepper-hot text-2xl mb-2"></i><p>Belum ada data bedengan cabai.</p></div>`;
       } else {
-        dashVaksin.innerHTML = pendingVaksin.map(v => {
-          const k = db.kandang.find(item => item.id === v.kandangId);
-          return `
-            <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between text-xs">
-              <div>
-                <p class="font-bold text-slate-800">${v.name}</p>
-                <p class="text-[11px] text-slate-500">Kandang: ${k ? k.name : '-'}</p>
-              </div>
-              <span class="px-2 py-1 bg-amber-100 text-amber-700 font-bold rounded-lg text-[10px]">${v.date}</span>
+        dashCabai.innerHTML = db.cabai.map(c => `
+          <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between text-xs">
+            <div>
+              <p class="font-bold text-slate-800">${c.name}</p>
+              <p class="text-[11px] text-slate-500">${c.variety} (${c.count} Batang)</p>
             </div>
-          `;
-        }).join('');
+            <span class="px-2 py-1 bg-emerald-100 text-emerald-700 font-bold rounded-lg text-[10px]">Tanam: ${c.date}</span>
+          </div>
+        `).join('');
       }
     }
 
-    function renderKandang() {
+    function renderAyam() {
       const grid = document.getElementById('kandangGrid');
-      if(db.kandang.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-100 text-slate-400 text-xs"><i class="fa-solid fa-house-chimney-crack text-3xl mb-2"></i><p>Belum ada data kandang. Klik Tambah Kandang Baru.</p></div>`;
-        return;
-      }
-
-      grid.innerHTML = db.kandang.map(k => {
-        const mort = k.initialPop - k.currentPop;
-        return `
-          <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="px-2.5 py-1 bg-farm-50 text-farm-700 font-bold rounded-lg text-[10px] uppercase">${k.type}</span>
-                <button onclick="deleteItem('kandang', '${k.id}')" class="text-slate-300 hover:text-rose-500 text-xs"><i class="fa-solid fa-trash"></i></button>
-              </div>
-              <h3 class="font-bold text-slate-800 text-base mb-1">${k.name}</h3>
-              <p class="text-xs text-slate-400 mb-4">Mulai: ${k.date}</p>
-              
-              <div class="grid grid-cols-2 gap-3 mb-4 bg-slate-50 p-3 rounded-xl">
-                <div>
-                  <p class="text-[10px] text-slate-400 font-semibold uppercase">Populasi Aktif</p>
-                  <p class="font-extrabold text-slate-900 text-sm">${k.currentPop} ekor</p>
-                </div>
-                <div>
-                  <p class="text-[10px] text-slate-400 font-semibold uppercase">Mortalitas (Mati)</p>
-                  <p class="font-extrabold text-rose-600 text-sm">${mort} ekor</p>
-                </div>
-              </div>
+      grid.innerHTML = db.kandang.length === 0 ? `<div class="col-span-full text-center py-8 text-slate-400 text-xs">Belum ada kandang ayam.</div>` :
+        db.kandang.map(k => `
+          <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex justify-between mb-2">
+              <span class="px-2 py-1 bg-farm-50 text-farm-700 font-bold rounded text-[10px]">${k.type}</span>
+              <button onclick="deleteItem('kandang', '${k.id}')" class="text-slate-300 hover:text-rose-500 text-xs"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <h3 class="font-bold text-slate-800 text-sm mb-1">${k.name}</h3>
+            <p class="text-xs text-slate-400 mb-3">Mulai: ${k.date}</p>
+            <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl text-xs">
+              <div><span class="text-slate-400 block text-[10px]">Populasi Aktif</span><b>${k.currentPop} ekor</b></div>
+              <div><span class="text-slate-400 block text-[10px]">Mati</span><b class="text-rose-600">${k.initialPop - k.currentPop} ekor</b></div>
             </div>
           </div>
-        `;
-      }).join('');
+        `).join('');
+
+      const tbody = document.getElementById('harianAyamTableBody');
+      tbody.innerHTML = db.harianAyam.length === 0 ? `<tr><td colspan="6" class="text-center py-4 text-slate-400 text-xs">Belum ada catatan harian.</td></tr>` :
+        db.harianAyam.map(h => {
+          const k = db.kandang.find(item => item.id === h.kandangId);
+          return `
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5">${h.date}</td>
+              <td class="p-2.5 font-bold">${k ? k.name : '-'}</td>
+              <td class="p-2.5 text-rose-600 font-bold">${h.mati}</td>
+              <td class="p-2.5">${h.pakan} kg</td>
+              <td class="p-2.5">${h.telur} butir</td>
+              <td class="p-2.5 text-right"><button onclick="deleteItem('harianAyam', '${h.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>
+          `;
+        }).join('');
     }
 
-    function renderHarian() {
-      const tbody = document.getElementById('harianTableBody');
-      if(db.harian.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-400 text-xs">Belum ada catatan harian.</td></tr>`;
-        return;
-      }
+    function renderMaggot() {
+      const grid = document.getElementById('maggotGrid');
+      grid.innerHTML = db.maggot.length === 0 ? `<div class="col-span-full text-center py-8 text-slate-400 text-xs">Belum ada batch maggot BSF.</div>` :
+        db.maggot.map(m => `
+          <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex justify-between mb-2">
+              <span class="px-2 py-1 bg-amber-50 text-amber-700 font-bold rounded text-[10px]">${m.phase}</span>
+              <button onclick="deleteItem('maggot', '${m.id}')" class="text-slate-300 hover:text-rose-500 text-xs"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <h3 class="font-bold text-slate-800 text-sm mb-1">${m.name}</h3>
+            <p class="text-xs text-slate-400 mb-3">Mulai: ${m.date}</p>
+            <div class="bg-slate-50 p-2.5 rounded-xl text-xs">
+              <span class="text-slate-400 block text-[10px]">Berat Biomassa</span>
+              <b class="text-amber-600 text-sm">${m.weight} kg</b>
+            </div>
+          </div>
+        `).join('');
+    }
 
-      tbody.innerHTML = db.harian.map(h => {
-        const k = db.kandang.find(item => item.id === h.kandangId);
-        return `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="p-3.5 font-medium">${h.date}</td>
-            <td class="p-3.5 font-bold text-slate-700">${k ? k.name : '-'}</td>
-            <td class="p-3.5 text-rose-600 font-bold">${h.mati} ekor</td>
-            <td class="p-3.5">${h.pakan} kg</td>
-            <td class="p-3.5">${h.telur} butir/kg</td>
-            <td class="p-3.5">${h.bobot} gram</td>
-            <td class="p-3.5 text-right">
-              <button onclick="deleteItem('harian', '${h.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-            </td>
+    function renderPupuk() {
+      const tbody = document.getElementById('pupukTableBody');
+      tbody.innerHTML = db.pupuk.length === 0 ? `<tr><td colspan="5" class="text-center py-6 text-slate-400 text-xs">Belum ada data pupuk.</td></tr>` :
+        db.pupuk.map(p => `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3">${p.date}</td>
+            <td class="p-3 font-bold">${p.name}</td>
+            <td class="p-3 text-blue-600 font-extrabold">${p.qty} kg</td>
+            <td class="p-3">${p.desc || '-'}</td>
+            <td class="p-3 text-right"><button onclick="deleteItem('pupuk', '${p.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button></td>
           </tr>
-        `;
-      }).join('');
+        `).join('');
     }
 
-    function renderPakan() {
-      const tbody = document.getElementById('pakanTableBody');
-      if(db.pakan.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400 text-xs">Belum ada stok pakan.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = db.pakan.map(p => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="p-2.5 font-bold text-slate-800">${p.name}</td>
-          <td class="p-2.5 font-extrabold text-farm-600">${p.qty} kg</td>
-          <td class="p-2.5">Rp${p.price.toLocaleString('id-ID')}</td>
-          <td class="p-2.5 text-right">
-            <button onclick="deleteItem('pakan', '${p.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function renderVaksin() {
-      const tbody = document.getElementById('vaksinTableBody');
-      if(db.vaksin.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 text-xs">Belum ada jadwal vaksin.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = db.vaksin.map(v => {
-        const k = db.kandang.find(item => item.id === v.kandangId);
-        const badgeColor = v.status === 'Selesai' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
-        return `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="p-2.5 font-bold text-slate-800">${k ? k.name : '-'}</td>
-            <td class="p-2.5">${v.name}</td>
-            <td class="p-2.5">${v.date}</td>
-            <td class="p-2.5"><span class="px-2 py-0.5 rounded-full font-bold text-[10px] ${badgeColor}">${v.status}</span></td>
-            <td class="p-2.5 text-right">
-              <button onclick="deleteItem('vaksin', '${v.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-      }).join('');
+    function renderCabai() {
+      const grid = document.getElementById('cabaiGrid');
+      grid.innerHTML = db.cabai.length === 0 ? `<div class="col-span-full text-center py-8 text-slate-400 text-xs">Belum ada bedengan cabai.</div>` :
+        db.cabai.map(c => `
+          <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="flex justify-between mb-2">
+              <span class="px-2 py-1 bg-emerald-50 text-emerald-700 font-bold rounded text-[10px]">${c.variety}</span>
+              <button onclick="deleteItem('cabai', '${c.id}')" class="text-slate-300 hover:text-rose-500 text-xs"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <h3 class="font-bold text-slate-800 text-sm mb-1">${c.name}</h3>
+            <p class="text-xs text-slate-400 mb-3">Tanam: ${c.date}</p>
+            <div class="bg-slate-50 p-2.5 rounded-xl text-xs">
+              <span class="text-slate-400 block text-[10px]">Jumlah Tanaman</span>
+              <b class="text-emerald-700 text-sm">${c.count} Batang</b>
+            </div>
+          </div>
+        `).join('');
     }
 
     function renderKeuangan() {
       const tbody = document.getElementById('keuanganTableBody');
-      if(db.keuangan.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400 text-xs">Belum ada transaksi keuangan.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = db.keuangan.map(k => {
-        const isMasuk = k.type === 'Pemasukan';
-        const color = isMasuk ? 'text-emerald-600' : 'text-rose-600';
-        const prefix = isMasuk ? '+' : '-';
-        return `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="p-3.5 font-medium">${k.date}</td>
-            <td class="p-3.5 font-bold text-slate-800">${k.desc}</td>
-            <td class="p-3.5"><span class="px-2.5 py-1 bg-slate-100 rounded-lg text-[10px] font-semibold">${k.category}</span></td>
-            <td class="p-3.5"><span class="font-bold ${color}">${k.type}</span></td>
-            <td class="p-3.5 font-extrabold ${color}">${prefix}Rp${k.amount.toLocaleString('id-ID')}</td>
-            <td class="p-3.5 text-right">
-              <button onclick="deleteItem('keuangan', '${k.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      tbody.innerHTML = db.keuangan.length === 0 ? `<tr><td colspan="6" class="text-center py-8 text-slate-400 text-xs">Belum ada transaksi kas.</td></tr>` :
+        db.keuangan.map(k => {
+          const isMasuk = k.type === 'Pemasukan';
+          const color = isMasuk ? 'text-emerald-600' : 'text-rose-600';
+          return `
+            <tr class="hover:bg-slate-50">
+              <td class="p-3.5">${k.date}</td>
+              <td class="p-3.5 font-bold">${k.desc}</td>
+              <td class="p-3.5"><span class="px-2 py-1 bg-slate-100 rounded text-[10px]">${k.sector}</span></td>
+              <td class="p-3.5 font-bold ${color}">${k.type}</td>
+              <td class="p-3.5 font-extrabold ${color}">${isMasuk ? '+' : '-'}Rp${k.amount.toLocaleString('id-ID')}</td>
+              <td class="p-3.5 text-right"><button onclick="deleteItem('keuangan', '${k.id}')" class="text-slate-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>
+          `;
+        }).join('');
     }
 
     function renderChart() {
       const ctx = document.getElementById('performanceChart');
       if(!ctx) return;
-
-      const lastData = db.harian.slice(-5);
-      const labels = lastData.map(h => h.date);
-      const matiData = lastData.map(h => h.mati);
-      const pakanData = lastData.map(h => h.pakan);
-
       if(perfChartInstance) perfChartInstance.destroy();
 
       perfChartInstance = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
-          labels: labels.length ? labels : ['Hari 1', 'Hari 2', 'Hari 3', 'Hari 4', 'Hari 5'],
-          datasets: [
-            {
-              label: 'Kematian Ayam (Ekor)',
-              data: matiData.length ? matiData : [0, 0, 0, 0, 0],
-              borderColor: '#f43f5e',
-              backgroundColor: 'rgba(244, 63, 94, 0.1)',
-              tension: 0.3,
-              fill: true
-            },
-            {
-              label: 'Pakan Keluar (Kg)',
-              data: pakanData.length ? pakanData : [0, 0, 0, 0, 0],
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              tension: 0.3,
-              fill: true
-            }
-          ]
+          labels: ['Ayam', 'Maggot (kg)', 'Pupuk (kg)', 'Cabai (Pohon)'],
+          datasets: [{
+            label: 'Kapasitas / Jumlah Total',
+            data: [
+              db.kandang.reduce((a,b)=>a+b.currentPop, 0),
+              db.maggot.reduce((a,b)=>a+b.weight, 0),
+              db.pupuk.reduce((a,b)=>a+b.qty, 0),
+              db.cabai.reduce((a,b)=>a+b.count, 0)
+            ],
+            backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444']
+          }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom' } }
-        }
+        options: { responsive: true, maintainAspectRatio: false }
       });
     }
 
-    // --- BACKUP & RESTORE JSON ---
     function exportDataJSON() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
-      const dlAnchorElem = document.createElement('a');
-      dlAnchorElem.setAttribute("href", dataStr);
-      dlAnchorElem.setAttribute("download", "the_brother_farm_backup.json");
-      dlAnchorElem.click();
+      const dl = document.createElement('a');
+      dl.setAttribute("href", dataStr);
+      dl.setAttribute("download", "the_brother_farm_pro_backup.json");
+      dl.click();
     }
 
     function importDataJSON(event) {
@@ -832,16 +794,14 @@
           db = JSON.parse(e.target.result);
           saveData();
           alert('Data berhasil dipulihkan!');
-        } catch(err) {
-          alert('File JSON tidak valid!');
-        }
+        } catch(err) { alert('File JSON tidak valid!'); }
       };
       reader.readAsText(file);
     }
 
     function resetAllData() {
-      if(!confirm('PERINGATAN: Semua data peternakan akan dihapus dan kembali ke nol. Lanjutkan?')) return;
-      db = { kandang: [], harian: [], pakan: [], vaksin: [], keuangan: [] };
+      if(!confirm('Hapus seluruh data terpadu?')) return;
+      db = { kandang: [], harianAyam: [], maggot: [], pupuk: [], cabai: [], keuangan: [] };
       saveData();
     }
   </script>
