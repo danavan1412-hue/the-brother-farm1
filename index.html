@@ -28,6 +28,26 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-farm-500 selection:text-white">
 
+  <!-- MODAL LOGIN / MASUKKAN SANDI -->
+  <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden p-6 text-center space-y-4">
+      <div class="w-14 h-14 bg-farm-100 text-farm-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-extrabold text-slate-900">Akses Terbatas</h3>
+        <p class="text-xs text-slate-500 mt-1">Masukkan sandi rahasia untuk membuka aplikasi THE-BROTHER-FARM.</p>
+      </div>
+      <form onsubmit="handleLogin(event)" class="space-y-3">
+        <input type="password" id="loginPasswordInput" placeholder="Masukkan Sandi..." class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-farm-500 focus:outline-none text-center tracking-widest font-bold" autofocus required>
+        <button type="submit" class="w-full py-3 bg-farm-600 hover:bg-farm-700 text-white font-extrabold rounded-xl text-xs transition shadow-lg shadow-farm-600/20">
+          Masuk ke Aplikasi
+        </button>
+      </form>
+      <p id="loginError" class="text-rose-500 text-xs font-bold hidden">Sandi salah! Silakan coba lagi.</p>
+    </div>
+  </div>
+
   <!-- TOP HEADER -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -406,6 +426,9 @@
 
   <!-- SCRIPT APLIKASI -->
   <script>
+    // --- SANDI / PASSWORD APLIKASI ---
+    const APP_PASSWORD = "210514"; // Anda bisa mengubah angka "12345" ini sesuai keinginan
+
     const STORAGE_KEY = "the_brother_farm_v2_clean";
     let db = {
       kandang: [],
@@ -418,6 +441,20 @@
     let perfChartInstance = null;
 
     document.getElementById('yearSpan').textContent = new Date().getFullYear();
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const inputPass = document.getElementById('loginPasswordInput').value;
+      const errorText = document.getElementById('loginError');
+
+      if (inputPass === APP_PASSWORD) {
+        document.getElementById('loginModal').classList.add('hidden');
+        initData();
+      } else {
+        errorText.classList.remove('hidden');
+        document.getElementById('loginPasswordInput').value = '';
+      }
+    }
 
     function initData() {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -498,7 +535,6 @@
 
       if(!kandangId) { alert('Pilih kandang terlebih dahulu!'); return; }
 
-      // Kurangi populasi kandang jika ada kematian
       const k = db.kandang.find(item => item.id === kandangId);
       if(k) {
         k.currentPop = Math.max(0, k.currentPop - mati);
@@ -587,7 +623,6 @@
       document.getElementById('dashTotalPakan').textContent = totalPakan.toLocaleString('id-ID') + ' kg';
       document.getElementById('dashSaldoKas').textContent = 'Rp' + saldo.toLocaleString('id-ID');
 
-      // Vaksin list on dashboard
       const dashVaksin = document.getElementById('dashVaksinList');
       const pendingVaksin = db.vaksin.filter(v => v.status === 'Terjadwal');
       if(pendingVaksin.length === 0) {
@@ -741,7 +776,6 @@
       const ctx = document.getElementById('performanceChart');
       if(!ctx) return;
 
-      // Ambil 5 data harian terakhir
       const lastData = db.harian.slice(-5);
       const labels = lastData.map(h => h.date);
       const matiData = lastData.map(h => h.mati);
@@ -810,9 +844,6 @@
       db = { kandang: [], harian: [], pakan: [], vaksin: [], keuangan: [] };
       saveData();
     }
-
-    // Load saat pertama kali
-    initData();
   </script>
 </body>
 </html>
